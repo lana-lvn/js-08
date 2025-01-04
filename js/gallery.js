@@ -1,4 +1,6 @@
-export const galleryItems = [
+"use strict";
+
+const images = [
   {
     preview:
       'https://cdn.pixabay.com/photo/2019/05/14/16/43/rchids-4202820__480.jpg',
@@ -63,3 +65,41 @@ export const galleryItems = [
     description: 'Lighthouse Coast Sea',
   },
 ];
+
+
+const container = document.querySelector('.gallery');
+container.insertAdjacentHTML("beforeend", createMarkup(images));
+container.addEventListener("click", handleClick);
+
+
+function createMarkup(arr) {
+    return arr.map(image => `<li class="gallery-item">
+  <a class="gallery-link" href=${image.original}>
+    <img
+      class="gallery-image"
+      src=${image.preview}
+      data-source=${image.original}
+      alt=${image.description}
+    />
+  </a>
+</li>`).join("");
+};
+
+function handleClick(e) {
+    e.preventDefault();
+    if (e.target === e.currentTarget) {
+        return;
+    }
+
+    const currentImg = e.target.closest(".gallery-link");
+    const link = currentImg.href;
+
+    const image = images.find((item) => item.original === link);
+
+    const instance = basicLightbox.create(`<div class="modal">
+        <img src=${image.original} alt=${image.description}/>
+        </div>`);
+    
+
+    instance.show();
+}
